@@ -1,16 +1,19 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import CalculatorCard from '../components/CalculatorCard';
-import toast from 'react-hot-toast';
-import { Button, Table } from 'reactstrap';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import axios from "../config/axios";
+
+//Material UI import
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import CalculatorCard from "../components/CalculatorCard";
+import toast from "react-hot-toast";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
 
 function LinkTab(props) {
   return (
@@ -50,18 +53,9 @@ function Calculation() {
 
   //get all banks and token control
   const getBanks = () => {
-    axios
-      .get("http://localhost/api/banks", {
-        headers: {
-          Authorization: JSON.parse(localStorage.getItem("token")),
-        },
-      })
-      .then((response) => {
-        setBanks(response.data.data);
-      })
-      .catch((error) => {
-        localStorage.removeItem("token");
-      });
+    axios.get("banks").then((res) => {
+      setBanks(res.data.data);
+    });
   };
 
   //nav tab onchange
@@ -172,7 +166,7 @@ function Calculation() {
         </div>
       </Box>
       <br />
-      <Table hover>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <thead>
           <tr>
             <th>
@@ -240,7 +234,11 @@ function Calculation() {
               />
             </th>
             <th>
-              <Button color="success" onClick={searchButtonClick}>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={searchButtonClick}
+              >
                 {" "}
                 Bul{" "}
               </Button>
@@ -266,6 +264,3 @@ function Calculation() {
   );
 }
 export default Calculation;
-
-
-

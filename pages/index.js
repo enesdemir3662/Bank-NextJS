@@ -2,7 +2,7 @@ import Router from "next/router";
 import { useState, React, useEffect } from "react";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import { Button } from "reactstrap";
+import Button from "@mui/material/Button";
 import { toast } from "react-hot-toast";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";

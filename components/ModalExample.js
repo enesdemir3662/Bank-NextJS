@@ -1,10 +1,9 @@
-import React, {  useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios from "../config/axios";
 
-function ModelExample({ bankAddModal, setBankAddModal,setBanks }) {
-
+function ModelExample({ bankAddModal, setBankAddModal, setBanks }) {
   const [textModal, setTextModal] = useState({
     bankName: "",
   });
@@ -16,40 +15,20 @@ function ModelExample({ bankAddModal, setBankAddModal,setBanks }) {
     });
   };
 
+  //get all banks and token control
   const getBanks = () => {
-    axios
-      .get("http://localhost/api/banks", {
-        headers: {
-          Authorization: JSON.parse(localStorage.getItem("token")),
-        },
-      })
-      .then((response) => {
-        setBanks(response.data.data);
-      })
-      .catch((error) => {
-        localStorage.removeItem("token");
-      });
+    axios.get("banks").then((res) => {
+      setBanks(res.data.data);
+    });
   };
 
   const addBank = () => {
     axios
-      .post(
-        "http://localhost/api/banks",
-        {
-          bank_name: textModal.bankName,
-        },
-        {
-          headers: {
-            Authorization: JSON.parse(localStorage.getItem("token")),
-          },
-        }
-      )
-      .then((response) => {
-        toast.success("Başarıyla kaydedildi!");
+      .post("banks", {
+        bank_name: textModal.bankName,
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error("Başarısız!");
+      .then((res) => {
+        toast.success("Başarıyla kaydedildi!");
         getBanks();
       });
     toggle();

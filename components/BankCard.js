@@ -1,19 +1,21 @@
-import React, { useState, useContext, useEffect } from "react";
-import { v4 as uuidv4 } from "uuid";
-import toast from "react-hot-toast";
+import React, { useState, useEffect } from "react";
 import axios from "../config/axios";
-import {
-  Button,
-  Table,
-  Accordion,
-  AccordionBody,
-  AccordionHeader,
-  AccordionItem,
-} from "reactstrap";
 import Interests from "./Interests";
+
+//Material UI import
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
 import AddIcon from "@mui/icons-material/Add";
+import { height } from "@mui/system";
+
 function BankCard({ bank, index, setBanks, refPosition }) {
   const divRef = React.useRef();
+  const divRef2 = React.useRef();
 
   const [className_, setClassName_] = useState("");
 
@@ -28,18 +30,20 @@ function BankCard({ bank, index, setBanks, refPosition }) {
   const [open, setOpen] = useState("");
 
   const toggle = (id) => {
+    console.log(open, id);
     if (open === id) {
       setOpen("");
       setClassName_("");
     } else {
       setOpen(id);
     }
+    console.log(open, id);
   };
 
   //get all banks and token control
   const getBanks = () => {
     axios.get("banks").then((res) => {
-      setBanks(response.data.data);
+      setBanks(res.data.data);
     });
   };
   const deleteBank = () => {
@@ -71,32 +75,57 @@ function BankCard({ bank, index, setBanks, refPosition }) {
   };
 
   const myFunction = () => {
-    if (open === index.toString() && refPosition < divRef.current.offsetTop) {
+    console.log(
+      open !== "",
+      refPosition > divRef.current.offsetTop,
+      refPosition,
+      divRef.current.offsetTop,
+      divRef.current.offsetTop < window.pageYOffset,
+      divRef.current.offsetTop > window.pageYOffset
+    );
+    if (open !== "" && refPosition > divRef.current.offsetTop) {
       if (divRef.current.offsetTop < window.pageYOffset) {
         setClassName_("sticky");
+        console.log("oldu");
       } else if (divRef.current.offsetTop > window.pageYOffset) {
         setClassName_("");
+        console.log("kapandı");
       }
     }
   };
   return (
-    <Accordion flush open={open} toggle={toggle}>
-      <AccordionItem>
-        <AccordionHeader targetId={index.toString()} className={className_}>
-          {bank.bank_name}
-        </AccordionHeader>
-        <AccordionBody accordionId={index.toString()}>
+    <Accordion flush open={open} onClick={() => toggle(index.toString())}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+        <Typography className={className_}>
+          <div
+            style={{
+              backgroundColor: open !== "" ? "#e9e9e9" : "white",
+              height: "40px",
+            }}
+          >
+            {bank.bank_name}
+            {open !== "" ? <hr /> : ""}
+          </div>
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography>
           <div className="d-flex justify-content-center" ref={divRef}>
             <p>proxolab Bank</p>
             <Button
-              color="danger"
+              color="error"
               className="ms-5"
+              variant="contained"
               onClick={() => deleteBank()}
             >
               sil
             </Button>
           </div>
-          <Table hover>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <div></div>
             <thead>
               <tr>
@@ -105,7 +134,11 @@ function BankCard({ bank, index, setBanks, refPosition }) {
                 <th>Vade</th>
                 <th>Aylık Faiz</th>
                 <th>
-                  <Button color="secondary" onClick={() => interestsAdd()}>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() => interestsAdd()}
+                  >
                     <AddIcon />
                   </Button>
                 </th>
@@ -128,8 +161,8 @@ function BankCard({ bank, index, setBanks, refPosition }) {
             </tbody>
             <div></div>
           </Table>
-        </AccordionBody>
-      </AccordionItem>
+        </Typography>
+      </AccordionDetails>
     </Accordion>
   );
 }

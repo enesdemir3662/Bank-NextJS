@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios from "../config/axios";
 import Form from "react-bootstrap/Form";
-import { Button, InputGroup, Table } from "reactstrap";
+import Button from "@mui/material/Button";
+
 import DeleteIcon from "@mui/icons-material/Delete";
 function Interests({
   ind,
@@ -118,19 +119,10 @@ function Interests({
 
   //get all banks and token control
   const getBanks = () => {
-    axios
-      .get("http://localhost/api/banks", {
-        headers: {
-          Authorization: JSON.parse(localStorage.getItem("token")),
-        },
-      })
-      .then((response) => {
-        setBanks(response.data.data);
-        toast.success("Başarılı!");
-      })
-      .catch((error) => {
-        localStorage.removeItem("token");
-      });
+    axios.get("banks").then((res) => {
+      setBanks(res.data.data);
+      toast.success("Başarılı!");
+    });
   };
 
   const interestsSave = () => {
@@ -146,26 +138,14 @@ function Interests({
     } else {
       if (val.id === null) {
         axios
-          .post(
-            "http://localhost/api/interests",
-            {
-              bank_id: bank.id,
-              interest: parseFloat(textModal.interest),
-              credit_type: parseInt(textModal.type),
-              time_option: parseInt(textModal.vade),
-            },
-            {
-              headers: {
-                Authorization: JSON.parse(localStorage.getItem("token")),
-              },
-            }
-          )
-          .then((response) => {
-            getBanks();
-            val.id = response.data.data.id;
+          .post("interests", {
+            bank_id: bank.id,
+            interest: parseFloat(textModal.interest),
+            credit_type: parseInt(textModal.type),
+            time_option: parseInt(textModal.vade),
           })
-          .catch((error) => {
-            console.log(error);
+          .then((res) => {
+            val.id = res.data.data.id;
             getBanks();
           });
       } else {
@@ -189,19 +169,13 @@ function Interests({
         bank_id: val.bank_id,
       });
       axios
-        .delete("http://localhost/api/interests", {
+        .delete("interests", {
           data: {
             id: val.id,
             bank_id: val.bank_id,
           },
-          headers: {
-            Authorization: JSON.parse(localStorage.getItem("token")),
-          },
         })
-        .then((response) => {
-          getBanks();
-        })
-        .catch((error) => {
+        .then((res) => {
           getBanks();
         });
     }
@@ -258,12 +232,17 @@ function Interests({
       </td>
       <td>
         <div className="d-flex">
-          <Button color="success" onClick={() => interestsSave()}>
+          <Button
+            color="success"
+            variant="contained"
+            onClick={() => interestsSave()}
+          >
             Kaydet
           </Button>
           <Button
-            color="danger"
+            color="error"
             className="ms-2"
+            variant="contained"
             onClick={() => interestDelete()}
           >
             <DeleteIcon />

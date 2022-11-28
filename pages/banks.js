@@ -1,32 +1,22 @@
 import React, { useState, useEffect } from "react";
 import ModalExample from "../components/ModalExample";
-import { Button } from "reactstrap";
-import { v4 as uuidv4 } from "uuid";
+import Button from "@mui/material/Button";
 import BankCard from "../components/BankCard";
-import axios from "axios";
+import axios from "../config/axios";
 
 function banks() {
   const [bankAddModal, setBankAddModal] = useState(false);
   const [banks, setBanks] = useState([]);
   const divRef = React.useRef();
   useEffect(() => {
-    tokenControl();
+    getBanks();
   }, []);
 
-  const tokenControl = () => {
-    axios
-      .get("http://localhost/api/banks", {
-        headers: {
-          Authorization: JSON.parse(localStorage.getItem("token")),
-        },
-      })
-      .then((response) => {
-        setBanks(response.data.data);
-      })
-      .catch((error) => {
-        localStorage.removeItem("token");
-        console.log(error);
-      });
+  //get all banks and token control
+  const getBanks = () => {
+    axios.get("banks").then((res) => {
+      setBanks(res.data.data);
+    });
   };
 
   const bankAdd = () => {
@@ -36,7 +26,9 @@ function banks() {
   return (
     <div>
       <div className="center" ref={divRef}>
-        <Button onClick={() => bankAdd()}>Banka Ekle</Button>
+        <Button onClick={() => bankAdd()} variant="contained">
+          Banka Ekle
+        </Button>
       </div>
       {bankAddModal && (
         <ModalExample
