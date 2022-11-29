@@ -2,10 +2,19 @@ import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
 import axios from "../config/axios";
-import Form from "react-bootstrap/Form";
-import Button from "@mui/material/Button";
-
+import Select from "@mui/material/Select";
+import { TextField, Button, Grid, Paper, Box, MenuItem } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { styled } from "@mui/material/styles";
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
+
 function Interests({
   ind,
   val,
@@ -181,75 +190,85 @@ function Interests({
     }
   };
   return (
-    <tr>
-      <th scope="row">{ind + 1}</th>
-      <td>
-        <Form.Select
-          aria-label="Default select example"
-          onChange={(e) => typeSelected(e.target.value)}
-          defaultValue={textModal.type}
-        >
-          <option value="0">Tür Seçin</option>
-          <option value="2">Tuketici Kredisi</option>
-          <option value="1">Konut Kredisi</option>
-          <option value="3">Mevduat Kredisi</option>
-        </Form.Select>
-      </td>
-      <td>
-        <Form.Select
-          aria-label="Default select example"
-          onChange={(e) => {
-            setTextModal((prev) => ({
-              ...prev,
-              vade: e.target.value,
-            }));
-          }}
-          value={textModal.vade}
-        >
-          <option value="0">Vade Seçin</option>
-          {vade.map((value) => {
-            return (
-              <option value={value.key} key={uuidv4()}>
-                {value.val}
-              </option>
-            );
-          })}
-        </Form.Select>
-      </td>
-      <td>
-        <input
-          type="number"
-          defaultValue={parseFloat(textModal.interest)}
-          placeholder="Faiz Oranı"
-          onChange={(e) =>
-            setTextModal((prev) => ({
-              ...prev,
-              interest: e.target.value,
-            }))
-          }
-          className={"form-control"}
-        />
-      </td>
-      <td>
-        <div className="d-flex">
-          <Button
-            color="success"
-            variant="contained"
-            onClick={() => interestsSave()}
+    <Grid container>
+      <Grid item xs={3}>
+        <Item sx={{ width: "90%", height: 60 }}>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            onChange={(e) => typeSelected(e.target.value)}
+            defaultValue={textModal.type}
           >
-            Kaydet
-          </Button>
-          <Button
-            color="error"
-            className="ms-2"
-            variant="contained"
-            onClick={() => interestDelete()}
+            <MenuItem value={0}>Tür Seçin</MenuItem>
+            <MenuItem value={2}>Tuketici Kredisi</MenuItem>
+            <MenuItem value={1}>Konut Kredisi</MenuItem>
+            <MenuItem value={3}>Mevduat Kredisi</MenuItem>
+          </Select>
+        </Item>
+      </Grid>
+      <Grid item xs={3}>
+        <Item sx={{ width: "90%", height: 60 }}>
+          <Select
+            onChange={(e) => {
+              setTextModal((prev) => ({
+                ...prev,
+                vade: e.target.value,
+              }));
+            }}
+            value={textModal.vade}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
           >
-            <DeleteIcon />
-          </Button>
-        </div>
-      </td>
-    </tr>
+            <MenuItem value={0}>Vade Seçin</MenuItem>
+            {vade.map((value) => {
+              return (
+                <MenuItem value={value.key} key={uuidv4()}>
+                  {value.val}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </Item>
+      </Grid>
+      <Grid item xs={3}>
+        <Item sx={{ width: "90%", height: 60 }}>
+          <TextField
+            label="Faiz Oranı"
+            id="outlined-size-small"
+            defaultValue={parseFloat(textModal.interest)}
+            size="small"
+            type="number"
+            onChange={(e) =>
+              setTextModal((prev) => ({
+                ...prev,
+                interest: e.target.value,
+              }))
+            }
+          />
+        </Item>
+      </Grid>
+      <Grid item xs={3}>
+        <Item sx={{ width: "90%", height: 60 }}>
+          <div className="d-flex">
+            <Button
+              color="success"
+              variant="contained"
+              onClick={() => interestsSave()}
+            >
+              Kaydet
+            </Button>
+            <Button
+              color="error"
+              sx={{ ml: 2 }}
+              variant="contained"
+              onClick={() => interestDelete()}
+            >
+              <DeleteIcon />
+            </Button>
+          </div>
+        </Item>
+      </Grid>
+    </Grid>
   );
 }
 export default Interests;

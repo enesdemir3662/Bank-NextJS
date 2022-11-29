@@ -1,19 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import axios from "../config/axios";
-
-//Material UI import
-import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import CalculatorCard from "../components/CalculatorCard";
 import toast from "react-hot-toast";
-import Button from "@mui/material/Button";
-import Table from "@mui/material/Table";
+//Material UI import
+import {
+  Box,
+  Tabs,
+  Tab,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  Button,
+  Table,
+  TextField,
+  Grid,
+  Paper,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Router, { useRouter } from "next/router";
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function LinkTab(props) {
   return (
@@ -28,6 +41,7 @@ function LinkTab(props) {
 }
 
 function Calculation() {
+  const router = useRouter();
   const [valueNavbar, setValueNavbar] = React.useState(0);
   const [search, setSearch] = useState([]);
   const [banks, setBanks] = useState([]);
@@ -166,87 +180,85 @@ function Calculation() {
         </div>
       </Box>
       <br />
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <thead>
-          <tr>
-            <th>
-              {valueNavbar === 0 ? (
-                <Box sx={{ minWidth: 120 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Kredi Türü
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      onChange={(e) => typeSelected(e.target.value)}
-                      value={textModal.type}
-                    >
-                      <MenuItem value={1}>Konut</MenuItem>
-                      <MenuItem value={2}>Tüketici</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Box>
-              ) : (
-                ""
-              )}
-            </th>
-            <th>
-              <Box sx={{ minWidth: 120 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Vade</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    onChange={(e) =>
-                      setTextModal((prev) => ({
-                        ...prev,
-                        vade: e.target.value,
-                      }))
-                    }
-                    value={textModal.vade}
-                  >
-                    {vade.map((value) => {
-                      return (
-                        <MenuItem value={value.key} key={uuidv4()}>
-                          {value.val}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </Box>
-            </th>
-            <th>
-              <input
-                placeholder={
-                  valueNavbar === 0 ? "Kredi Miktarı" : "Yatırılacak Para"
-                }
-                className={"form-control"}
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Item style={{ height: 55 }}>
+            {valueNavbar === 0 ? (
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">
+                  Kredi Türü
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  onChange={(e) => typeSelected(e.target.value)}
+                  value={textModal.type}
+                >
+                  <MenuItem value={1}>Konut</MenuItem>
+                  <MenuItem value={2}>Tüketici</MenuItem>
+                </Select>
+              </FormControl>
+            ) : (
+              ""
+            )}
+          </Item>
+        </Grid>
+        <Grid item xs={3}>
+          <Item style={{ height: 55 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Vade</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
                 onChange={(e) =>
                   setTextModal((prev) => ({
                     ...prev,
-                    money: e.target.value,
+                    vade: e.target.value,
                   }))
                 }
-                value={textModal.money}
-                type={"number"}
-              />
-            </th>
-            <th>
-              <Button
-                color="success"
-                variant="contained"
-                onClick={searchButtonClick}
+                value={textModal.vade}
               >
-                {" "}
-                Bul{" "}
-              </Button>
-            </th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </Table>
+                {vade.map((value) => {
+                  return (
+                    <MenuItem value={value.key} key={uuidv4()}>
+                      {value.val}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </Item>
+        </Grid>
+        <Grid item xs={3}>
+          <Item style={{ height: 55 }}>
+            <TextField
+              label={valueNavbar === 0 ? "Kredi Miktarı" : "Yatırılacak Para"}
+              id="outlined-size-small"
+              size="small"
+              onChange={(e) =>
+                setTextModal((prev) => ({
+                  ...prev,
+                  money: e.target.value,
+                }))
+              }
+              value={textModal.money}
+              type={"number"}
+            />
+          </Item>
+        </Grid>
+        <Grid item xs={3}>
+          <Item style={{ height: 55 }}>
+            <Button
+              color="success"
+              variant="contained"
+              onClick={searchButtonClick}
+            >
+              {" "}
+              Bul{" "}
+            </Button>
+          </Item>
+        </Grid>
+      </Grid>
       {search.map((bank, index) => {
         return (
           <CalculatorCard

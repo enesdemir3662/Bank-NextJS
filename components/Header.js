@@ -1,10 +1,7 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
 
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Box from "@mui/material/Box";
+import { Tabs, Box, Tab } from "@mui/material";
 
 function Header(props) {
   const router = useRouter();

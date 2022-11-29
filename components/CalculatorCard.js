@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 function BankCard({ bank, index, valueNavbar, money, banks, setBanks }) {
@@ -15,16 +17,6 @@ function BankCard({ bank, index, valueNavbar, money, banks, setBanks }) {
     });
     setBankName(a[0].bank_name);
   }, []);
-
-  const [open, setOpen] = useState("");
-
-  const toggle = (id) => {
-    if (open === id) {
-      setOpen("");
-    } else {
-      setOpen(id);
-    }
-  };
 
   return (
     <Accordion key={uuidv4()}>
@@ -68,7 +60,7 @@ function BankCard({ bank, index, valueNavbar, money, banks, setBanks }) {
         <Typography>
           {valueNavbar === 0 ? (
             <div>
-              <div className="d-flex center">
+              <div className="d-flex center ">
                 {bankName}
                 <p className="ms-5">
                   Toplam Geri Ödeme :

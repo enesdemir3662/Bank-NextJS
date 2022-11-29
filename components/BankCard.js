@@ -3,26 +3,39 @@ import axios from "../config/axios";
 import Interests from "./Interests";
 
 //Material UI import
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Button from "@mui/material/Button";
-import Table from "@mui/material/Table";
 import AddIcon from "@mui/icons-material/Add";
 import { height } from "@mui/system";
+import { styled } from "@mui/material/styles";
+import {
+  Grid,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Paper,
+  Box,
+  Button,
+  Typography,
+} from "@mui/material";
+import Router, { useRouter } from "next/router";
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 function BankCard({ bank, index, setBanks, refPosition }) {
+  const router = useRouter();
   const divRef = React.useRef();
-  const divRef2 = React.useRef();
 
   const [className_, setClassName_] = useState("");
 
   const [interestCount, setInterestCount] = useState(
     bank.interests === null ? [] : bank.interests
   );
-
   useEffect(() => {
     setInterestCount(bank.interests === null ? [] : bank.interests);
   }, [bank]);
@@ -70,38 +83,39 @@ function BankCard({ bank, index, setBanks, refPosition }) {
       },
     ]);
   };
+
   window.onscroll = function () {
-    myFunction();
+    if (divRef.current !== null) {
+      myFunction();
+    }
   };
 
   const myFunction = () => {
-    console.log(
-      open !== "",
-      refPosition > divRef.current.offsetTop,
-      refPosition,
-      divRef.current.offsetTop,
-      divRef.current.offsetTop < window.pageYOffset,
-      divRef.current.offsetTop > window.pageYOffset
-    );
-    if (open !== "" && refPosition > divRef.current.offsetTop) {
+    // console.log(
+    //   open !== "",
+    //   refPosition < divRef.current.offsetTop,
+    //   refPosition,
+    //   divRef.current.offsetTop,
+    //   divRef.current.offsetTop < window.pageYOffset,
+    //   divRef.current.offsetTop > window.pageYOffset
+    // );
+    if (open !== "" && refPosition < divRef.current.offsetTop) {
       if (divRef.current.offsetTop < window.pageYOffset) {
         setClassName_("sticky");
-        console.log("oldu");
       } else if (divRef.current.offsetTop > window.pageYOffset) {
         setClassName_("");
-        console.log("kapandı");
       }
     }
   };
   return (
-    <Accordion flush open={open} onClick={() => toggle(index.toString())}>
+    <Accordion open={open} onClick={() => toggle(index.toString())}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1a-content"
         id="panel1a-header"
       >
         <Typography className={className_}>
-          <div
+          <Box
             style={{
               backgroundColor: open !== "" ? "#e9e9e9" : "white",
               height: "40px",
@@ -109,31 +123,34 @@ function BankCard({ bank, index, setBanks, refPosition }) {
           >
             {bank.bank_name}
             {open !== "" ? <hr /> : ""}
-          </div>
+          </Box>
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Typography>
-          <div className="d-flex justify-content-center" ref={divRef}>
-            <p>proxolab Bank</p>
+          <div className="center" ref={divRef}>
             <Button
               color="error"
-              className="ms-5"
+              sx={{ ml: 5, height: 40 }}
               variant="contained"
               onClick={() => deleteBank()}
             >
               sil
             </Button>
           </div>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <div></div>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Tür</th>
-                <th>Vade</th>
-                <th>Aylık Faiz</th>
-                <th>
+          <Box sx={{ flexGrow: 1, height: 80, mt: 5 }}>
+            <Grid container>
+              <Grid item xs={3}>
+                <Item sx={{ width: "90%", height: 30 }}>Tür</Item>
+              </Grid>
+              <Grid item xs={3}>
+                <Item sx={{ width: "90%", height: 30 }}>Vade</Item>
+              </Grid>
+              <Grid item xs={3}>
+                <Item sx={{ width: "90%", height: 30 }}>Aylık Faiz</Item>
+              </Grid>
+              <Grid item xs={3}>
+                <Item sx={{ width: "90%", height: 30 }}>
                   <Button
                     color="secondary"
                     variant="contained"
@@ -141,26 +158,24 @@ function BankCard({ bank, index, setBanks, refPosition }) {
                   >
                     <AddIcon />
                   </Button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {interestCount.map((val, ind) => {
-                return (
-                  <Interests
-                    val={val}
-                    ind={ind}
-                    bank={bank}
-                    key={ind}
-                    setInterestCount={setInterestCount}
-                    interestCount={interestCount}
-                    setBanks={setBanks}
-                  />
-                );
-              })}
-            </tbody>
-            <div></div>
-          </Table>
+                </Item>
+              </Grid>
+            </Grid>
+          </Box>
+          {interestCount.map((val, ind) => {
+            return (
+              <Grid container key={ind}>
+                <Interests
+                  val={val}
+                  ind={ind}
+                  bank={bank}
+                  setInterestCount={setInterestCount}
+                  interestCount={interestCount}
+                  setBanks={setBanks}
+                />
+              </Grid>
+            );
+          })}
         </Typography>
       </AccordionDetails>
     </Accordion>

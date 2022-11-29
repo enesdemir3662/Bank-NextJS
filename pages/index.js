@@ -2,7 +2,7 @@ import Router from "next/router";
 import { useState, React, useEffect } from "react";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
-import Button from "@mui/material/Button";
+import { Button, TextField } from "@mui/material";
 import { toast } from "react-hot-toast";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -74,12 +74,12 @@ export default function index() {
             name="username"
             control={control}
             render={({ field: { onChange, value, ref } }) => (
-              <input
-                type="text"
-                placeholder="Kullanıcı Adı..."
-                variant="outlined"
+              <TextField
+                label="Kullanıcı adı"
+                id="outlined-size-small"
                 value={value}
-                className="form-control"
+                size="small"
+                type="text"
                 onChange={onChange}
               />
             )}
@@ -94,12 +94,12 @@ export default function index() {
             name="password"
             control={control}
             render={({ field: { onChange, value, ref } }) => (
-              <input
-                type="password"
-                placeholder="Şifre..."
-                variant="outlined"
+              <TextField
+                label="Şifre"
+                id="outlined-size-small"
                 value={value}
-                className="form-control"
+                size="small"
+                type="password"
                 onChange={onChange}
               />
             )}

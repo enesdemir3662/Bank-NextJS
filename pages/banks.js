@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalExample from "../components/ModalExample";
-import Button from "@mui/material/Button";
+import { Button } from "@mui/material";
 import BankCard from "../components/BankCard";
 import axios from "../config/axios";
 

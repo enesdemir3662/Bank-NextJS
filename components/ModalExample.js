@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import toast from "react-hot-toast";
 import axios from "../config/axios";
+import { TextField, Button, Modal, Stack, Box } from "@mui/material";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 function ModelExample({ bankAddModal, setBankAddModal, setBanks }) {
   const [textModal, setTextModal] = useState({
@@ -43,25 +55,35 @@ function ModelExample({ bankAddModal, setBankAddModal, setBanks }) {
   };
   return (
     <div>
-      <Modal isOpen={bankAddModal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Banka Ekle</ModalHeader>
-        <ModalBody>
+      <Modal
+        open={bankAddModal}
+        toggle={toggle}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 500 }}>
+          <h2 id="parent-modal-title">Banka Ekle</h2>
           <br />
-          <input
+          <TextField
+            label="Banka Adı"
+            id="outlined-size-small"
+            size="small"
             type="text"
-            placeholder="Banka Adı"
             onChange={(e) => setTextModal({ bankName: e.target.value })}
-            className={"form-control"}
           />
-        </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggle}>
-            Kapat
-          </Button>
-          <Button color="primary" onClick={() => saveModal()}>
-            Ekle
-          </Button>
-        </ModalFooter>
+          <Stack spacing={2} direction="row" sx={{ mt: 5 }}>
+            <Button color="secondary" onClick={toggle} variant="contained">
+              Kapat
+            </Button>
+            <Button
+              color="primary"
+              onClick={() => saveModal()}
+              variant="contained"
+            >
+              Ekle
+            </Button>
+          </Stack>
+        </Box>
       </Modal>
     </div>
   );
